@@ -10,7 +10,7 @@ module Embulk
           min: config.param(:min, :integer),
           max: config.param(:max, :integer),
           threads: config.param(:threads, :integer, default: 2),
-          fail_random: config.param(:fail_random, :long, default: 0.2),
+          fail_random: config.param(:fail_random, :float, default: 0.2),
         }
 
         columns = [
@@ -52,6 +52,7 @@ module Embulk
         slices.each_with_index do |numbers, i|
           next if index != i
           numbers.each do |number|
+            raise "Random error!" if rand > task[:fail_random]
             Embulk.logger.info "add #{number}"
             page_builder.add([number])
           end
