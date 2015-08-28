@@ -1,6 +1,6 @@
 # Sequence input plugin for Embulk
 
-TODO: Write short description here and embulk-input-sequence.gemspec file.
+Just test plugin to me.
 
 ## Overview
 
@@ -11,17 +11,19 @@ TODO: Write short description here and embulk-input-sequence.gemspec file.
 
 ## Configuration
 
-- **option1**: description (integer, required)
-- **option2**: description (string, default: `"myvalue"`)
-- **option3**: description (string, default: `null`)
+See below.
 
 ## Example
 
 ```yaml
 in:
   type: sequence
-  option1: example1
-  option2: example2
+  min: 1
+  max: 100
+  columns:
+    - {name: "number", type: "long"}
+out:
+  type: stdout
 ```
 
 
