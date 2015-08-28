@@ -10,7 +10,7 @@ module Embulk
           min: config.param(:min, :integer),
           max: config.param(:max, :integer),
           threads: config.param(:threads, :integer, default: 2),
-          fail_random: config.param(:fail_random, :boolean, default: true),
+          fail_random: config.param(:fail_random, :long, default: 0.2),
         }
 
         columns = [
@@ -43,7 +43,13 @@ module Embulk
       end
 
       def run
-        (task[:min]..task[:max]).each_slice(task[:threads]).with_index do |numbers, i|
+        range = (task[:min]..task[:max]).to_a
+        slices = task[:threads].times.map do |i|
+          pivot = range.count / task[:threads]
+          to = (i == range.count ? range.count : pivot * (i + 1))
+          range[pivot * i, to]
+        end
+        slices.each_with_index do |numbers, i|
           next if index != i
           numbers.each do |number|
             Embulk.logger.info "add #{number}"
